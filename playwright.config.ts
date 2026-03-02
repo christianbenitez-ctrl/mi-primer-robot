@@ -29,15 +29,28 @@ export default defineConfig({
     // baseURL: 'http://localhost:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    headless: true,
+    headless: false,
     trace: 'on-first-retry',
   },
 
   /* Configure projects for major browsers */
   projects: [
+    // 1. Agregamos el proyecto de Setup
+    {
+      name: 'setup',
+      testMatch: /.*\.setup\.ts/,
+    },
+
+    // 2. Modificamos el bloque de Chromium que ya tenías
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { 
+        ...devices['Desktop Chrome'],
+        // Le decimos que inyecte el gafete guardado en todos los tests
+        storageState: 'playwright/.auth/user.json', 
+      },
+      // Le decimos que NO arranque hasta que el 'setup' termine
+      dependencies: ['setup'], 
     },
 
     //{
