@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 
+test.use({ storageState: {cookies: [], origins:[] }});
+
 test('Iniciar sesión como paciente con CC', async ({ page }) => {
     await page.goto('https://test.ikitech.com.co/health-portal/sign-in');
     await page.getByRole('combobox', { name: 'Tipo de usuario' }).click();
