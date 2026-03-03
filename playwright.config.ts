@@ -1,39 +1,42 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests', // Busca en la raíz, pero los proyectos filtrarán por carpeta
-  /* Run tests in files in parallel */
+  testDir: './tests',
   fullyParallel: true,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   
   use: {
-    headless: true, // Ideal para GitHub Actions
+    headless: true,
     trace: 'on-first-retry',
+    // 1. Configuramos el idioma base a nivel global
+    locale: 'es-CO',
+    timezoneId: 'America/Bogota',
   },
 
-  /* Configure projects for major browsers */
   projects: [
     // --- 1. CONFIGURACIÓN DE LOS SETUPS ---
     {
       name: 'Setup Curso',
-      testMatch: /curso\.setup\.ts/, // Solo busca el setup del curso
+      testMatch: /curso\.setup\.ts/,
     },
     {
       name: 'Setup Trabajo',
-      testMatch: /IPSSaludAntioquia\.setup\.ts/, // Solo busca el setup de tu trabajo
+      testMatch: /IPSSaludAntioquia\.setup\.ts/,
+      // 2. IMPORTANTE: El Setup debe tener el locale para que la sesión se cree en español
+      use: {
+        ...devices['Desktop Chrome'],
+        locale: 'es-CO',
+        timezoneId: 'America/Bogota',
+      },
     },
 
     // --- 2. CONFIGURACIÓN DE LAS CARPETAS DE PRUEBA ---
     {
       name: 'Pruebas Curso',
-      testDir: './tests/curso', // Bloquea al robot solo en esta carpeta
+      testDir: './tests/curso',
       use: {
         ...devices['Desktop Chrome'],
         storageState: 'playwright/.auth/curso-user.json', 
@@ -42,10 +45,16 @@ export default defineConfig({
     },
     {
       name: 'Pruebas Trabajo',
-      testDir: './tests/IPSSaludAntioquia', // <-- ¡TU CARPETA DE TRABAJO EXACTA!
+      testDir: './tests/IPSSaludAntioquia',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: 'playwright/.auth/trabajo-user.json', 
+        storageState: 'playwright/.auth/trabajo-user.json',
+        // 3. Reforzamos el locale y añadimos el encabezado HTTP por si la web es terca
+        locale: 'es-CO',
+        timezoneId: 'America/Bogota',
+        extraHTTPHeaders: {
+          'Accept-Language': 'es-CO,es;q=0.9',
+        },
       },
       dependencies: ['Setup Trabajo'], 
     },
