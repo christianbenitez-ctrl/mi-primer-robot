@@ -45,9 +45,9 @@ export default defineConfig({
       testDir: './tests/IPSSaludAntioquia', // <-- ¡TU CARPETA DE TRABAJO EXACTA!
       use: {
         ...devices['Desktop Chrome'],
-        storageState: 'playwright/.auth/trabajo-user.json', 
+      //  storageState: 'playwright/.auth/trabajo-user.json', 
       },
-      dependencies: ['Setup Trabajo'], 
+      //dependencies: ['Setup Trabajo'], 
     },
   ],
 });
