@@ -10,4 +10,5 @@ test('Iniciar sesión como paciente con CC', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Contraseña' }).fill('43765210');
     await page.getByRole('button', { name: 'Iniciar sesión' }).click();
     await expect(page.getByText('Bienvenido al Portal de I.P.S Salud Antioquia')).toBeVisible();
+    await page.pause();
 });
