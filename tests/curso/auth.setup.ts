@@ -1,7 +1,7 @@
 import { test as setup, expect } from '@playwright/test';
 
 // Le indicamos la ruta donde va a guardar el archivo con la memoria (el gafete)
-const authFile = 'playwright/.auth/user.json'; 
+const authFile = 'playwright/.auth/curso-user.json'; 
 
 setup('Autenticarse una sola vez', async ({ page }) => {
     // 1. Navegamos e iniciamos sesión normalmente
